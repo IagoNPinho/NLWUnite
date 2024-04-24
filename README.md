@@ -65,7 +65,7 @@ O **Pass.in** é uma aplicação voltada a gerencia de participantes em eventos.
 
 ## Como Realizar as Requisições HTTP do Projeto com Insomnia
 
-Deixarei um tutorial básico de como baixar, instalar e criar os tipos de requisições utilizadas. (GET/POST)
+Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, instalar e criar os tipos de requisições utilizadas. (GET/POST)
 
 1. **Criar de evento**
     - **Requisição:**
