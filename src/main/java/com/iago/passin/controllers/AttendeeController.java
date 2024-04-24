@@ -24,6 +24,7 @@ public class AttendeeController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    // Endpoint que realizar o checkin do participante no evento
     @PostMapping("/{attendeeId}/check-in")
     public ResponseEntity<URI> registerCheckIn(@PathVariable String attendeeId, UriComponentsBuilder uriComponentsBuilder){
         this.attendeeService.checkInAttendee(attendeeId);
