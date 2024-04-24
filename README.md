@@ -7,12 +7,11 @@ O **Pass.in** é uma aplicação voltada a gerencia de participantes em eventos.
     - **Java** com:
         - **Spring Boot**
         - **Maven**
-        - **Flayway**
         - **JPA**
         - **Lombok**
 - **Banco de Dados**:
-    - **HSQLDB** (local)
-
+    - **HSQLDB** (local):
+        - **Flayway**
 
 ## Funcionalidades Atuais
 1. **Criação de evento**:
