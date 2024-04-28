@@ -6,9 +6,7 @@ import com.iago.passin.domain.attendee.execeptions.AttendeeNotFoundException;
 import com.iago.passin.domain.checkin.CheckIn;
 import com.iago.passin.dto.attendee.*;
 import com.iago.passin.repositories.AttendeeRepository;
-import com.iago.passin.repositories.CheckInRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.SpringVersion;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDateTime;
@@ -51,6 +49,11 @@ public class AttendeeService {
         return newAttendee;
     }
 
+    // Remove o participante
+    public void deleteAttendee(Attendee attendee){
+        this.attendeeRepository.delete(attendee);
+    }
+
     // Retorna o crachá do participante
     public AttendeeBadgeResponseDTO getAttendeeBadge(String attendeeId, UriComponentsBuilder uriComponentsBuilder){
         Attendee attendee = this.getAttendee(attendeeId);
@@ -68,8 +71,8 @@ public class AttendeeService {
         this.chekInService.registerCheckIn(attendee);
     }
 
-    // Retorna o participante pelo o id ou lança uma exceção de participante não encontrado.
-    private  Attendee getAttendee(String attendeeId){
+    // Retorna o participante pelo id ou lança uma exceção de participante não encontrado.
+    public Attendee getAttendee(String attendeeId){
         return this.attendeeRepository.findById(attendeeId).orElseThrow(() -> new AttendeeNotFoundException("attendee not found with ID: " + attendeeId));
     }
 }

@@ -47,11 +47,16 @@ O **Pass.in** é uma aplicação voltada a gerencia de participantes em eventos.
 6. **Realizar Check-in no Dia do Evento**:
     - O sistema permite o check-in dos participantes no dia do evento.
 
+7. **Remover Participante do Evento**
+    - O sistema permite remover o participante do evento antes de realizar o check-in.
+    - Ao remover o participante, retornará informações do participante em caso de erro, assim poderá entrar em contato.
+
 ## Regras de Negócio
 
 - Os participantes só podem se inscrever uma vez em um evento.
 - A inscrição só é permitida em eventos com vagas disponíveis.
 - O check-in só pode ser feito uma única vez por participante.
+- Os participantes só podem ser removidos antes de realizar o check-in.
 
 
 ## Como Executar o Projeto
@@ -64,7 +69,7 @@ O **Pass.in** é uma aplicação voltada a gerencia de participantes em eventos.
 
 ## Como Realizar as Requisições HTTP do Projeto com Insomnia
 
-Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, instalar e criar os tipos de requisições utilizadas. (GET/POST)
+Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, instalar e criar os tipos de requisições utilizadas. (GET/POST/DELETE)
 
 1. **Criar de evento**
     - **Requisição:**
@@ -296,12 +301,43 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
         - Headers:
             - URL para acessar crachá:
                 - 	http://localhost:8080/attendees/948a669d-0331-4382-9571-bef2cd1a30fd/badge
+7. **Remover participante que não realizou check-in**
+    - **Requisição:**
+        - Tipo:
+            - DELETE
+        - URL:
+            - http://localhost:8080/events/{ID-do-evento}/attendee/{ID-do-participante}/delete
 
+      **Exemplo:**
+        - URL:
+            - http://localhost:8080/events/093bc3c5-f4fb-4d2a-8df5-f6b1a821a1f7/attendee/180425a9-12b5-4781-8fd4-b6548b5eab6c/delete
+    - **Retorno:**
+        - JSON
+          ```json
+          {
+            "attendeeId": "{ID-do-participante}",
+            "name": "{nome-do-participante}",
+            "eventID": "{ID-do-evento}"
+          }
+          ```
+
+      **Exemplo:**
+        - JSON
+          ```json
+          {
+            "attendeeId": "180425a9-12b5-4781-8fd4-b6548b5eab6c",
+            "name": "Iago Nascimento de Pinho",
+            "eventID": "093bc3c5-f4fb-4d2a-8df5-f6b1a821a1f7"
+          }
+          ```
 ## Funcionalidades Futuras
 
-1. Remover Participante.
-2. Atualizar Dados do Evento.
-3. Atualizar Dados do Participante.
+1. Atualizar Dados do Evento.
+2. Atualizar Dados do Participante.
+
+## Funcionalidades implementadas Extra Projeto
+
+1. Remover o participante do evento.
 
 ## Créditos
 

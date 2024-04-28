@@ -1,14 +1,19 @@
 package com.iago.passin.service;
 
 import com.iago.passin.domain.attendee.Attendee;
+import com.iago.passin.domain.attendee.execeptions.AttendeeDoesNotDeleteException;
+import com.iago.passin.domain.checkin.CheckIn;
+import com.iago.passin.domain.checkin.exceptions.CheckInAlreadyExistsExceptions;
 import com.iago.passin.domain.event.Event;
 import com.iago.passin.domain.event.exceptions.EventFullException;
 import com.iago.passin.domain.event.exceptions.EventNotFoundException;
+import com.iago.passin.dto.attendee.AttendeeDeleteDTO;
 import com.iago.passin.dto.attendee.AttendeeIdDTO;
 import com.iago.passin.dto.attendee.AttendeeRequestDTO;
 import com.iago.passin.dto.event.EventIdDTO;
 import com.iago.passin.dto.event.EventRequestDTO;
 import com.iago.passin.dto.event.EventResponseDTO;
+import com.iago.passin.repositories.AttendeeRepository;
 import com.iago.passin.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,12 +21,14 @@ import org.springframework.stereotype.Service;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class EventService {
     private final EventRepository eventRepository;
     private final AttendeeService attendeeService;
+    private final ChekInService chekInService;
 
     public EventResponseDTO getEventDetail(String eventId) {
         Event event = getEventById(eventId);
@@ -53,6 +60,19 @@ public class EventService {
         this.attendeeService.registerAttendee(newAttendee);
 
         return new AttendeeIdDTO(newAttendee.getId());
+    }
+
+    public AttendeeDeleteDTO deleteAttendeeOnEvent(String eventId, String attendeeId){
+        Attendee attendee = this.attendeeService.getAttendee(attendeeId);
+        Event event = this.getEventById(eventId);
+
+        Optional<CheckIn> isCheckedIn = this.chekInService.getCheckIn(attendeeId);
+
+        if(isCheckedIn.isPresent()) throw new CheckInAlreadyExistsExceptions("Attendee cannot be excluded because they already checked in");
+
+        this.attendeeService.deleteAttendee(attendee);
+
+        return new AttendeeDeleteDTO(attendee.getId(), attendee.getName(), event.getId());
     }
 
     private Event getEventById(String eventId){
