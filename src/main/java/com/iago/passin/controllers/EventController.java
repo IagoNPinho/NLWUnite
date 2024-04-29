@@ -24,9 +24,9 @@ public class EventController {
     private final AttendeeService attendeeService;
 
     // Endpoint que retorna o evento existente
-    @GetMapping("/{id}")
-    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable String id){
-        EventResponseDTO event = this.eventService.getEventDetail(id);
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable String eventId){
+        EventResponseDTO event = this.eventService.getEventDetail(eventId);
         return ResponseEntity.ok(event);
     }
 
@@ -38,6 +38,14 @@ public class EventController {
         URI uri = uriComponentsBuilder.path("/events/{id}").buildAndExpand(eventIdDTO.eventId()).toUri();
 
         return ResponseEntity.created(uri).body(eventIdDTO);
+    }
+
+    // Endpoint que atualiza o evento
+    @PutMapping("/{eventId}/update")
+    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable String eventId, @RequestBody EventRequestDTO body, UriComponentsBuilder uriComponentsBuilder){
+        EventResponseDTO eventResponseDTO = this.eventService.updateEvent(eventId, body);
+
+        return ResponseEntity.ok(eventResponseDTO);
     }
 
     // Endpoint que retorna os participantes do evento
@@ -57,6 +65,7 @@ public class EventController {
         return ResponseEntity.created(uri).body(attendeeIdDTO);
     }
 
+    // Endpoint para remover o participante
     @DeleteMapping("/{eventId}/attendee/{attendeeId}/delete")
     public ResponseEntity<AttendeeDeleteDTO> deleteParticipant(@PathVariable String eventId, @PathVariable String attendeeId){
         AttendeeDeleteDTO attendeeDeleteDTO = this.eventService.deleteAttendeeOnEvent(eventId, attendeeId);

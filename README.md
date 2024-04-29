@@ -51,12 +51,18 @@ O **Pass.in** é uma aplicação voltada a gerencia de participantes em eventos.
     - O sistema permite remover o participante do evento antes de realizar o check-in.
     - Ao remover o participante, retornará informações do participante em caso de erro, assim poderá entrar em contato.
 
+8. **Atualizar Dados do Evento**
+    - O sistema permite atualizar os dados do evento, se:
+      - O ID do evento existir no DB;
+      - Nenhum participante já tiver realizado o check-in.
+
 ## Regras de Negócio
 
 - Os participantes só podem se inscrever uma vez em um evento.
 - A inscrição só é permitida em eventos com vagas disponíveis.
 - O check-in só pode ser feito uma única vez por participante.
 - Os participantes só podem ser removidos antes de realizar o check-in.
+- Eventos com participantes que já realizaram check-in não podem ser alterados.
 
 
 ## Como Executar o Projeto
@@ -330,14 +336,56 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
             "eventID": "093bc3c5-f4fb-4d2a-8df5-f6b1a821a1f7"
           }
           ```
+8. **Atualizar dados do evento**
+    - **Requisição:**
+        - Tipo:
+            - PUT
+        - URL:
+            - http://localhost:8080/events/{ID-do-evento}/update
+
+      **Exemplo:**
+        - URL:
+            - http://localhost:8080/events/093bc3c5-f4fb-4d2a-8df5-f6b1a821a1f7/update
+    - **Retorno:**
+        - JSON
+          ```json
+          {
+              "event": {
+                  "id": "{ID-do-evento}",
+                  "title": "{Título-do-evento}",
+                  "details": "{Detalhe/Descrição-doevento}",
+                  "slug": "{Slug-com-base-no-título}",
+                  "maximumAttendee": {Quantidade-máxima-de-participantes},
+                  "attendeeAmount": {Quantidade-atual-de-participantes}
+              }
+          }
+          ```
+
+      **Exemplo:**
+        - JSON
+          ```json
+          {
+            "event": {
+                "id": "093bc3c5-f4fb-4d2a-8df5-f6b1a821a1f7",
+                "title": "JAVA + Spring Boot + HSQLDB",
+                "details": "Aprenda Java com Spring Boot e HSQLDB de forma gratuita e online",
+                "slug": "java-spring-boot-hsqldb",
+                "maximumAttendee": 5000,
+                "attendeeAmount": 1
+            }
+          }
+          ```
+
 ## Funcionalidades Futuras
 
-1. Atualizar Dados do Evento.
-2. Atualizar Dados do Participante.
+1. Atualizar Dados do Participante.
+2. Excluir Evento.
+3. Gerar certificado de participação.
 
 ## Funcionalidades implementadas Extra Projeto
 
-1. Remover o participante do evento.
+1. **Remover o participante do evento.**
+2. **Atualizar Dados do Evento.**
 
 ## Créditos
 

@@ -15,7 +15,6 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class AttendeeController {
     private final AttendeeService attendeeService;
-    private final ChekInService chekInService;
 
     // Endpoint que retorna o crachá do participante
     @GetMapping("/{attendeeId}/badge")
