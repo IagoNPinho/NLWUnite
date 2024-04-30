@@ -118,6 +118,7 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
               "eventId": "ef629727-7ebd-415a-9b39-02bb9de7c368"
             }
           ```
+          
 2. **Inscrever Participante**
     - **Requisição:**
         - Tipo:
@@ -159,6 +160,7 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
               "attendeeId": "d5059d0d-5690-4b15-a8ea-b16cd794ff0b"
             }
           ```
+          
 3. **Visualizar dados do evento**
     - **Requisição:**
         - Tipo:
@@ -198,6 +200,7 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
               }
           }
           ```
+          
 4. **Visualizar lista de participantes do evento**
     - **Requisição:**
         - Tipo:
@@ -253,6 +256,7 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
               ]
           }
           ```
+          
 5. **Visualizar Crachá de Inscrição do Participante**
     - **Requisição:**
         - Tipo:
@@ -288,6 +292,7 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
               }
           }
           ```
+          
 6. **Realizar Check-in no Dia do Evento**
     - **Requisição:**
         - Tipo:
@@ -307,6 +312,7 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
         - Headers:
             - URL para acessar crachá:
                 - 	http://localhost:8080/attendees/948a669d-0331-4382-9571-bef2cd1a30fd/badge
+              
 7. **Remover participante que não realizou check-in**
     - **Requisição:**
         - Tipo:
@@ -336,6 +342,7 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
             "eventID": "093bc3c5-f4fb-4d2a-8df5-f6b1a821a1f7"
           }
           ```
+          
 8. **Atualizar dados do evento**
     - **Requisição:**
         - Tipo:
@@ -375,17 +382,67 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
             }
           }
           ```
+          
+9. **Atualizar dados do participante**
+    - **Requisição:**
+      - Tipo:
+        - PUT
+      - URL:
+        - http://localhost:8080/attendees/{ID-do-participante}/update
+      - Body:
+        - JSON:
+        ````json
+        {
+          "name": "{nome-do-participante}",
+          "email": "{e-mail-do-participante}"
+        }
+        ````
+
+      **Exemplo:**
+        - URL:
+          - http://localhost:8080/attendees/d5f424fd-914a-4690-b8a0-1fad4fd67ff4/update
+        - Body:
+          - JSON:
+          ````json
+          {
+            "name": "Iago Nascimento de Pinho",
+            "email": "iago.pinho.dev@gmail.com"
+          }
+          ````
+    - **Retorno:**
+        - JSON
+          ```json
+          {
+            "name": "{nome-do-participante}",
+            "email": "{e-mail-do-participante}",
+            "createdAt": "{data-de-registro-do-participante}",
+            "checkInAt": "{data-de-check-in-do-participante}",
+            "badgeUrl": "{URL-para-visualizar-crachá}"
+          }
+          ```
+
+      **Exemplo:**
+        - JSON
+          ```json
+          {
+            "name": "Iago Nascimento de Pinho",
+            "email": "iago.pinho.dev@gmail.com",
+            "createdAt": "2024-04-28T18:40:12.247952",
+            "checkInAt": "2024-04-28T18:47:06.588689",
+            "badgeUrl": "http://localhost:8080/attendees/d5f424fd-914a-4690-b8a0-1fad4fd67ff4/badge"
+          }
+          ```
 
 ## Funcionalidades Futuras
 
-1. Atualizar Dados do Participante.
-2. Excluir Evento.
-3. Gerar certificado de participação.
+1. Excluir Evento.
+2. Gerar certificado de participação.
 
-## Funcionalidades implementadas Extra Projeto
+## Funcionalidades Implementadas Extra Projeto
 
 1. **Remover o participante do evento.**
-2. **Atualizar Dados do Evento.**
+2. **Atualizar os Dados do Evento.**
+3. **Atualizar os Dados do Participante**
 
 ## Créditos
 

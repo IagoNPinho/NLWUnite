@@ -34,4 +34,9 @@ public class ChekInService {
     public Optional<CheckIn> getCheckIn(String attendeeId){
         return this.checkinRepository.findByAttendeeId(attendeeId);
     }
+
+    public LocalDateTime getCheckInAt(String attendeeId){
+        Optional<CheckIn> checkIn = this.getCheckIn(attendeeId);
+        return checkIn.<LocalDateTime>map(CheckIn::getCreatedAt).orElse(null);
+    }
 }

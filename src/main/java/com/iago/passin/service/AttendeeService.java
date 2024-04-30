@@ -9,6 +9,8 @@ import com.iago.passin.repositories.AttendeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,13 +30,13 @@ public class AttendeeService {
     public AttendeesListResponseDTO getEventsAttendee(String eventId){
         List<Attendee> attendeeList = this.getAllAttendeesFromEvent(eventId);
 
-        List<AttendeeDetails> attendeeDetailsList = attendeeList.stream().map(attendee -> {
+        List<AttendeeDetailsDTO> attendeeDetailsDTOList = attendeeList.stream().map(attendee -> {
             Optional<CheckIn> checkIn = this.chekInService.getCheckIn(attendee.getId());
             LocalDateTime checkedInAt = checkIn.<LocalDateTime>map(CheckIn::getCreatedAt).orElse(null);
-            return new AttendeeDetails(attendee.getId(), attendee.getName(), attendee.getEmail(), attendee.getCreateAt(), checkedInAt);
+            return new AttendeeDetailsDTO(attendee.getId(), attendee.getName(), attendee.getEmail(), attendee.getCreateAt(), checkedInAt);
         }).toList();
 
-        return new AttendeesListResponseDTO(attendeeDetailsList);
+        return new AttendeesListResponseDTO(attendeeDetailsDTOList);
     }
 
     // Verifica se o participante já está inscrito
@@ -74,5 +76,24 @@ public class AttendeeService {
     // Retorna o participante pelo id ou lança uma exceção de participante não encontrado.
     public Attendee getAttendee(String attendeeId){
         return this.attendeeRepository.findById(attendeeId).orElseThrow(() -> new AttendeeNotFoundException("attendee not found with ID: " + attendeeId));
+    }
+
+    // Retorna os detalhes do participante atualizado
+    public AttendeeUpdateResponseDTO updateAttendee(String attendeeId, AttendeeRequestDTO requestDTO, UriComponentsBuilder uriComponentsBuilder ) {
+        Attendee attendee = this.getAttendee(attendeeId);
+
+        Attendee attendeeUpdated = new Attendee(attendee.getId(), requestDTO.name(), requestDTO.email(), attendee.getEvent(), attendee.getCreateAt());
+
+        this.attendeeRepository.save(attendeeUpdated);
+
+        LocalDateTime checkedInAt = this.chekInService.getCheckInAt(attendeeId);
+
+        String uri = this.getUriBadge(uriComponentsBuilder, attendeeId).toString();
+
+        return new AttendeeUpdateResponseDTO(requestDTO.name(), requestDTO.email(), attendee.getCreateAt(), checkedInAt, uri);
+    }
+
+    public URI getUriBadge(UriComponentsBuilder uriComponentsBuilder, String attendeeId){
+        return uriComponentsBuilder.path("/attendees/{attendeeId}/badge").buildAndExpand(attendeeId).toUri();
     }
 }

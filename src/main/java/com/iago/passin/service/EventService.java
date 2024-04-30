@@ -16,7 +16,6 @@ import com.iago.passin.dto.event.EventResponseDTO;
 import com.iago.passin.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.List;

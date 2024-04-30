@@ -40,9 +40,9 @@ public class EventController {
         return ResponseEntity.created(uri).body(eventIdDTO);
     }
 
-    // Endpoint que atualiza o evento
+    // Endpoint que atualiza os dados do evento evento
     @PutMapping("/{eventId}/update")
-    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable String eventId, @RequestBody EventRequestDTO body, UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable String eventId, @RequestBody EventRequestDTO body){
         EventResponseDTO eventResponseDTO = this.eventService.updateEvent(eventId, body);
 
         return ResponseEntity.ok(eventResponseDTO);
