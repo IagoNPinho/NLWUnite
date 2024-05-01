@@ -56,13 +56,22 @@ O **Pass.in** é uma aplicação voltada a gerencia de participantes em eventos.
       - O ID do evento existir no DB;
       - Nenhum participante já tiver realizado o check-in.
 
+9. **Atualizar dados do participante**
+    - O sistema permite atualizar os dados do participante, se:
+        - O ID do participante existir no DB.
+
+10. **Apagar Evento**
+    - O sistema permite apagar o evento, se:
+        - O ID do evento existir no DB;
+        - Nenhum participante já tiver realizado o check-in.
+
 ## Regras de Negócio
 
 - Os participantes só podem se inscrever uma vez em um evento.
 - A inscrição só é permitida em eventos com vagas disponíveis.
 - O check-in só pode ser feito uma única vez por participante.
 - Os participantes só podem ser removidos antes de realizar o check-in.
-- Eventos com participantes que já realizaram check-in não podem ser alterados.
+- Eventos com participantes que já realizaram check-in não podem ser alterados ou excluídos.
 
 
 ## Como Executar o Projeto
@@ -432,17 +441,33 @@ Deixarei um [tutorial básico](https://youtu.be/YATd7vjQiJM) de como baixar, ins
             "badgeUrl": "http://localhost:8080/attendees/d5f424fd-914a-4690-b8a0-1fad4fd67ff4/badge"
           }
           ```
+10. **Apagar Evento**
+    - **Requisição:**
+        - Tipo:
+            - DELETE
+        - URL:
+            - http://localhost:8080/events/{ID-do-evento}/delete
 
+      **Exemplo:**
+        - URL:
+            - http://localhost:8080/events/526a7499-536d-4568-b64d-581b5358fa69/delete
+    - **Retorno:**
+        - JSON
+          ```json
+          {
+            "createEvent": "http://localhost:8080/events"
+          }
+          ```
 ## Funcionalidades Futuras
 
-1. Excluir Evento.
-2. Gerar certificado de participação.
+1. Gerar certificado de participação.
 
 ## Funcionalidades Implementadas Extra Projeto
 
 1. **Remover o participante do evento.**
 2. **Atualizar os Dados do Evento.**
 3. **Atualizar os Dados do Participante**
+4. **Apagar evento**
 
 ## Créditos
 

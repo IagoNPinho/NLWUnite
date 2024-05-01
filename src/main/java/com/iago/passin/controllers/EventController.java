@@ -5,6 +5,7 @@ import com.iago.passin.dto.attendee.AttendeeDeleteDTO;
 import com.iago.passin.dto.attendee.AttendeeIdDTO;
 import com.iago.passin.dto.attendee.AttendeeRequestDTO;
 import com.iago.passin.dto.attendee.AttendeesListResponseDTO;
+import com.iago.passin.dto.event.EventDeleteResponseDTO;
 import com.iago.passin.dto.event.EventIdDTO;
 import com.iago.passin.dto.event.EventRequestDTO;
 import com.iago.passin.dto.event.EventResponseDTO;
@@ -58,9 +59,9 @@ public class EventController {
     // Endpoint para registrar o participante
     @PostMapping("/{eventId}/attendees")
     public ResponseEntity<AttendeeIdDTO> registerParticipant(@PathVariable String eventId, @RequestBody AttendeeRequestDTO body, UriComponentsBuilder uriComponentsBuilder){
-         AttendeeIdDTO attendeeIdDTO = this.eventService.registerAttendeeOnEvent(eventId, body);
+        AttendeeIdDTO attendeeIdDTO = this.eventService.registerAttendeeOnEvent(eventId, body);
 
-        URI uri = uriComponentsBuilder.path("/attendees/{attendeeId}/badge").buildAndExpand(attendeeIdDTO.attendeeId()).toUri();
+        URI uri = this.attendeeService.getUriBadge(uriComponentsBuilder, attendeeIdDTO.attendeeId());
 
         return ResponseEntity.created(uri).body(attendeeIdDTO);
     }
@@ -71,5 +72,13 @@ public class EventController {
         AttendeeDeleteDTO attendeeDeleteDTO = this.eventService.deleteAttendeeOnEvent(eventId, attendeeId);
 
         return ResponseEntity.ok(attendeeDeleteDTO);
+    }
+
+    // Endpoint para apagar o evento
+    @DeleteMapping("{eventId}/delete")
+    public ResponseEntity<EventDeleteResponseDTO> deleteEvent(@PathVariable String eventId, UriComponentsBuilder uriComponentsBuilder){
+        EventDeleteResponseDTO eventDTO = this.eventService.deleteEvent(eventId, uriComponentsBuilder);
+
+        return ResponseEntity.ok(eventDTO);
     }
 }

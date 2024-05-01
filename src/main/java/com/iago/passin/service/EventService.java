@@ -4,18 +4,23 @@ import com.iago.passin.domain.attendee.Attendee;
 import com.iago.passin.domain.checkin.CheckIn;
 import com.iago.passin.domain.checkin.exceptions.CheckInAlreadyExistsExceptions;
 import com.iago.passin.domain.event.Event;
+import com.iago.passin.domain.event.exceptions.EventAlreadyExistException;
 import com.iago.passin.domain.event.exceptions.EventFullException;
-import com.iago.passin.domain.event.exceptions.EventHasAttendeeAlreadyCheckedIn;
+import com.iago.passin.domain.event.exceptions.EventAttendeeCheckedInException;
 import com.iago.passin.domain.event.exceptions.EventNotFoundException;
 import com.iago.passin.dto.attendee.AttendeeDeleteDTO;
 import com.iago.passin.dto.attendee.AttendeeIdDTO;
 import com.iago.passin.dto.attendee.AttendeeRequestDTO;
+import com.iago.passin.dto.event.EventDeleteResponseDTO;
 import com.iago.passin.dto.event.EventIdDTO;
 import com.iago.passin.dto.event.EventRequestDTO;
 import com.iago.passin.dto.event.EventResponseDTO;
 import com.iago.passin.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,8 +48,15 @@ public class EventService {
         newEvent.setMaximumAttendees(eventDTO.maximumAttendees());
         newEvent.setSlug(this.createSlug(eventDTO.title()));
 
+        this.verifyEventExist(newEvent.getTitle());
         this.eventRepository.save(newEvent);
         return new EventIdDTO(newEvent.getId());
+    }
+
+    // Verifica se já existe um evento com o mesmo título
+    private void verifyEventExist(String title) {
+        Optional<Event> event = this.eventRepository.findByTitle(title);
+        if(event.isPresent())throw new EventAlreadyExistException("Already exist a event with this title! Please, try other!");
     }
 
     // Registra um participante em um evento
@@ -82,7 +94,7 @@ public class EventService {
 
         for(Attendee attendee : attendeeList){
             Optional<CheckIn> isCheckedIn = this.chekInService.getCheckIn(attendee.getId());
-            if(isCheckedIn.isPresent()) throw new EventHasAttendeeAlreadyCheckedIn("Attendees on this event have already checked in");
+            if(isCheckedIn.isPresent()) throw new EventAttendeeCheckedInException("Attendees on this event have already checked in");
         }
     }
 
@@ -98,6 +110,18 @@ public class EventService {
         this.attendeeService.deleteAttendee(attendee);
 
         return new AttendeeDeleteDTO(attendee.getId(), attendee.getName(), event.getId());
+    }
+
+    // Remove o evento e retorna o link para criar um novo
+    public EventDeleteResponseDTO deleteEvent(String eventId, UriComponentsBuilder uriComponentsBuilder) {
+        Event event = this.getEventById(eventId);
+
+        this.attendeesAlreadyCheckedInOnEvent(eventId);
+
+        this.eventRepository.delete(event);
+
+        URI uri = uriComponentsBuilder.path("/events").build().toUri();
+        return new EventDeleteResponseDTO(uri);
     }
 
     // Retorna um evento com base no ID
